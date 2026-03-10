@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'gateway1' => [
+    'url'   => env('GATEWAY1_URL', 'http://localhost:3001'),
+    'token' => env('GATEWAY1_TOKEN'),
+    ],
+    
+    'gateway2' => [
+        'url'    => env('GATEWAY2_URL', 'http://localhost:3002'),
+        'token'  => env('GATEWAY2_AUTH_TOKEN'),
+        'secret' => env('GATEWAY2_AUTH_SECRET'),
+    ],
+
 ];
