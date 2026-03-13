@@ -1,59 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Multi-Gateway Payment API - BeTalent Tech
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto é a implementação do teste prático para a BeTalent Tech. Embora eu me identifique como **desenvolvedor iniciante**, optei por desafiar meus limites e implementar requisitos dos **Níveis 2 e 3**, focando em uma arquitetura modular e escalável.
 
-## About Laravel
+## Stack Tecnológica
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4.6: Utilizando as últimas funcionalidades da linguagem (como property hooks e asymetrical visibility).
+- Laravel 12.53: Versão mais recente do framework, garantindo performance e segurança.
+- Docker: Ambiente isolado para MySQL e Mocks dos Gateways.
+- Sanctum: Autenticação robusta para API.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Diferenciais Implementados (Nível 2 e 3)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Cálculo de Valor no Back-end: O valor da transação não é enviado pelo usuário, mas calculado com base no preço do produto cadastrado (Segurança Financeira).
+- Fallback Automático: Se o Gateway A falhar, o sistema tenta o Gateway B automaticamente.
+- Arquitetura de Adapters: Facilidade extrema para adicionar um terceiro ou quarto gateway apenas criando uma nova classe que respeita a `PaymentGatewayInterface`.
+- RBAC (Role-Based Access Control): Controle de acesso rigoroso por níveis (Admin, Finance, Manager, User).
+- Documentação Profissional: Código comentado seguindo padrões de mercado.
 
-## Learning Laravel
+## Desafios e Aprendizados
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Esta foi minha primeira experiência profunda desenvolvendo exclusivamente como API. Minha experiência anterior era focada em aplicações Laravel tradicionais (com Blade e Views).
+Dificuldades superadas:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Entender a persistência de tokens (Sanctum) em vez de sessões.
+- Lógica de transformação de dados para JSON.
+- Orquestração de serviços externos via HTTP dentro de um fluxo de fallback.
 
-## Laravel Sponsors
+## Rotas Principais
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Públicas
 
-### Premium Partners
+- `POST /api/login`: Autenticação e geração de token.
+- `GET /api/products`: Listagem de produtos disponíveis.
+- `POST /api/purchase`: Realização de compra (Cálculo via back-end).
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Privadas (Requer Token Bearer)
 
-## Contributing
+- `POST /api/transactions/{id}/refund`: Estorno (Apenas ADMIN/FINANCE).
+- `GET /api/transactions`: Listagem com filtros (Apenas ADMIN/FINANCE).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Instalação
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Clone o repositório.
+2. Certifique-se de que os mocks de gateways estejam rodando nos endereços: `http://localhost:3001` e `http://localhost:3002`.
+3. Execute `composer install`.
+4. Configure o `.env` com seu banco MySQL.
+5. `php artisan migrate --seed`.
+6. `php artisan serve`.
