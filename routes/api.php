@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     |-- Rotas do financeiro (e admin) --|
     */
     Route::middleware('role:admin,finance')->group(function () {
-        // Ex: Route::get('/transactions', [TransactionController::class, 'index']);
+        Route::get('/transactions', [TransactionController::class, 'index']);
+        Route::post('/transactions/{transaction}/refund', [TransactionController::class, 'refund']);
     });
     
 });

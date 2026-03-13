@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Transaction extends Model
 {
+    protected $appends = ['status_name'];
+    
     /** @var int Initial state before gateway processing */
     const STATUS_PENDING  = 0;
 
